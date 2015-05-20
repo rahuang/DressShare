@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}Test Dress Page{% endblock %}
+
+{% block body %}
+    <p>You are currently logged in as {{username}}</p>
+    <p>All the dresses you can borrow:</p>
+    <ul>
+        {% for dress in dresses %}
+            <li>
+                {{ dress.name }}
+                <br>
+                {% if dress.thumbnail %}
+                    <img src="/media/{{ dress.thumbnail }}" height="100px"/>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

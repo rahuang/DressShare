@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}Test Dress Page{% endblock %}
+
+{% block body %}
+    <p>You are currently logged in as {{username}}</p>
+    <p>All the dresses you own:</p>
+    <ul>
+        {% for dress in dresses %}
+            <li>{{ dress.name }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

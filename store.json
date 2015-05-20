@@ -1,0 +1,47 @@
+[
+{
+    "fields": {
+        "owner": 1,
+        "name": "testdress1",
+        "thumbnail": ""
+    },
+    "model": "store.dress",
+    "pk": 1
+},
+{
+    "fields": {
+        "owner": 2,
+        "name": "testdress2",
+        "thumbnail": ""
+    },
+    "model": "store.dress",
+    "pk": 2
+},
+{
+    "fields": {
+        "owner": 2,
+        "name": "testdress3",
+        "thumbnail": "uploaded_files/1432009390_53_11051412_10204743542481029_457787552_n.jpg"
+    },
+    "model": "store.dress",
+    "pk": 3
+},
+{
+    "fields": {
+        "owner": 3,
+        "name": "testdress4",
+        "thumbnail": "uploaded_files/1432008142_95_11051412_10204743542481029_457787552_n.jpg"
+    },
+    "model": "store.dress",
+    "pk": 4
+},
+{
+    "fields": {
+        "owner": 1,
+        "name": "dresswithimage",
+        "thumbnail": "uploaded_files/1432009867_24_11051412_10204743542481029_457787552_n.jpg"
+    },
+    "model": "store.dress",
+    "pk": 5
+}
+]

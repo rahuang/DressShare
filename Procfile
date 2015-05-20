@@ -1,0 +1,1 @@
+web: gunicorn DressShare.wsgi:application

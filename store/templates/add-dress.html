@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}Test Dress Page{% endblock %}
+
+{% block body %}
+    <h2>Add Dress</h2>
+    <div>
+        <form name="adddress" action="{% url 'process-dress' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <p>Dress Name: <input type="text" name="name"></p>
+            <p>Thumbnail: <input type="file" name="thumbnail" accept="image/*"></p>
+            <input type="submit" value="Register">
+        </form>
+    </div>
+{% endblock %}
