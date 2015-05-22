@@ -15,18 +15,23 @@ from users.models import Profile
 
 
 class LoginPage(TemplateView):
-    template_name = 'users/login.html'
+    #template_name = 'users/login.html'
+    def get(self, request):
+        if(not request.user.is_authenticated()):
+            return render(request, 'users/login.html', {"user": request.user, "loggedin": request.user.is_authenticated()})
+        else:
+            return redirect('gallery')
+
     
     
 class RegisterPage(TemplateView):
     #template_name = 'users/register.html'
 
     def get(self, request):
-        args = {}
-        args.update(csrf(request))
-        args['form'] = UserCreationForm()
-        print args
-        return render(request, 'users/register.html')
+        if(not request.user.is_authenticated()):
+            return render(request, 'users/register.html', {"user": request.user, "loggedin": request.user.is_authenticated()})
+        else:
+            return redirect('gallery')
     
     
 class LogoutPage(View):
@@ -68,7 +73,7 @@ class ProcessLog(View):
                 login(request, user)
                 
                 # Everything is OK
-                return redirect('users_test')
+                return redirect('gallery')
                 
             else:
                 # Account Disabled
@@ -76,7 +81,7 @@ class ProcessLog(View):
                 
         else:
             # Authentication Failed
-            return HttpResponse('FAIL_AUTH')
+            return redirect('users_login')
 
 # class ProcessReg(View):
 #     def post(self, request):
@@ -111,6 +116,7 @@ class ProcessReg(View):
             password = postData['password']
             
             gender = postData['gender']
+            dresssize = int(postData['dresssize'])
             
         except KeyError as e:
             response = "FAIL_POSTDATA::{}".format(e)
@@ -133,6 +139,9 @@ class ProcessReg(View):
                 
             if User.objects.filter(email=email).exists():
                 raise self.InvalidData("Email Taken")
+
+            if dresssize > 100 or dresssize < 0:
+                raise self.InvalidData(str(dresssize) + "Invalid Dress Size")
                 
         except self.InvalidData as e:
             response = "FAIL_POSTDATA::{}".format(e)
@@ -165,7 +174,7 @@ class ProcessReg(View):
         ####################
         
         try:
-            newProfile = Profile(user=newUser, gender=gender)
+            newProfile = Profile(user=newUser, gender=gender, dresssize=dresssize)
             newProfile.save()
             
         except Exception as e:
@@ -188,7 +197,8 @@ class ProcessReg(View):
         # Everything is OK #
         ####################
         
-        return redirect('users_test')
+        #return redirect('users_test')
+        return HttpResponse("user created")
    
         
 class LoginTestView(View):

@@ -7,7 +7,25 @@
         
     </head>
     <body>
-        <h1>This is a Heading</h1>
+        <h1>DressShare</h1>
+        <a href="/">index</a>
+        <a href="/gallery">gallery</a>
+        <a href="/store/fittingroom">fitting room</a>
+        <br>
+        <a href="/store/add-dress">add dress</a>
+        <a href="/store/test1">dresses you own</a>
+        <br>
+        <br>
+        {% block logout %}
+            {% if loggedin %}
+                <a href="/users/logout">logout</a>
+                <h2>Welcome {{fname}}</h2>
+            {% else %}
+                <a href="/users/login">login</a><br>
+                <a href="/users/register">register</a>
+            {% endif %}
+        {% endblock %}
+
         {% block body %}{% endblock %}
     </body>
 </html>

@@ -5,6 +5,12 @@
 
 {% block title %}Index Page{% endblock %}
 
+{% block logout %}
+    {% with loggedin=loggedin fname=user.first_name %}
+        {{block.super}}
+    {% endwith %}
+{% endblock logout %}
+
 {% block body %}
     <p>Hello, world!</p>
 {% endblock %}

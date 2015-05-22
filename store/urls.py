@@ -21,4 +21,14 @@ urlpatterns = patterns('',
             views.ProcessDress.as_view(),
             name='process-dress',
         ),
+    url(
+            r'^processfittingroom/$',
+            views.ProcessFit.as_view(),
+            name='process-fitting-room',
+        ),
+    url(
+            r'^fittingroom/$',
+            views.FittingRoomView.as_view(),
+            name='fitting-room',
+        ),
 )

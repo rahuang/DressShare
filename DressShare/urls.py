@@ -20,6 +20,8 @@ urlpatterns = patterns('',
     
     url(r'^$', views.IndexPage.as_view(), name='index'),
     url(r'^gallery$', views.Gallery.as_view(), name='gallery'),
+    url(r'^detail/(?P<id_name>\w+)/$', views.Details.as_view(), name='details'),
+    
 
 
     url(r'^test/', include('testapp.urls')),

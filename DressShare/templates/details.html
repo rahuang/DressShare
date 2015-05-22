@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}Test Dress Page{% endblock %}
+
+{% block logout %}
+    {% with loggedin=loggedin fname=user.first_name %}
+        {{block.super}}
+    {% endwith %}
+{% endblock logout %}
+
+{% block body %}
+    <p>You are currently logged in as {{user.username}}</p>
+    <h3>{{dress.name}}</h3>
+    {% if dress.picture %}
+        <img src="/media/{{ dress.picture }}" height="100px"/>
+    {% endif %}
+    <h4>Owner: {{dress.owner}}</h4>
+    {% if dress.description %}
+        <p>{{dress.description}}</p>
+    {% endif %}
+
+    <ul>
+        <li>Color: {{dress.color}}</li>
+        <li>Size: {{dress.size}}</li>
+        <li>Length: {{dress.length}}</li>
+        <li>Formality: {{dress.formality}}</li>
+    </ul>
+{% endblock %}

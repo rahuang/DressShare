@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 
+{% block logout %}
+    {% with loggedin=loggedin fname=user.first_name %}
+        {{block.super}}
+    {% endwith %}
+{% endblock logout %}
+
 {% block title %}Test Dress Page{% endblock %}
 
 {% block body %}

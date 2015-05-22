@@ -3,18 +3,26 @@
 
 {% block title %}Test Dress Page{% endblock %}
 
+{% block logout %}
+    {% with loggedin=loggedin fname=user.first_name %}
+        {{block.super}}
+    {% endwith %}
+{% endblock logout %}
+
 {% block body %}
-    <p>You are currently logged in as {{username}}</p>
+    <p>You are currently logged in as {{user.username}}</p>
     <p>All the dresses you can borrow:</p>
-    <ul>
+    <div>
         {% for dress in dresses %}
             <li>
-                {{ dress.name }}
+                <a href="/detail/{{dress.id}}">{{ dress.name }}</a>
                 <br>
-                {% if dress.thumbnail %}
-                    <img src="/media/{{ dress.thumbnail }}" height="100px"/>
+                {% if dress.picture %}
+                    <img src="/media/{{ dress.picture }}" height="100px"/>
                 {% endif %}
+                <br>
+                <a href="/store/processfittingroom?id={{dress.id}}">add to fitting room</a>
             </li>
         {% endfor %}
-    </ul>
+    </div>
 {% endblock %}

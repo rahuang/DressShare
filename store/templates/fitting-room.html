@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}Test Dress Page{% endblock %}
+
+{% block logout %}
+    {% with loggedin=loggedin fname=user.first_name %}
+        {{block.super}}
+    {% endwith %}
+{% endblock logout %}
+
+{% block scripts %}
+    <script type="text/javascript">
+        function check(){
+            return confirm('Do you really want to submit the form?');
+        }
+    </script>
+{% endblock %}
+
+{% block body %}
+    <h2>Fitting Room</h2>
+    <form action="/store/processfittingroom/" method="POST" onsubmit="return check()">
+        {% csrf_token %}
+        <div>
+            {% for fit in fitroom %}
+                <li>
+                    {% if edit %}
+                        <input type="checkbox" name="remove" value="{{ fit.id }}" />
+                    {% endif %}
+                    <a href="/detail/{{fit.dress.id}}">{{ fit.dress.name }}</a>
+                    <br>
+                    {% if fit.dress.picture %}
+                        <img src="/media/{{ fit.dress.picture }}" height="100px"/>
+                    {% endif %}
+                    <br>
+                </li>
+            {% endfor %}
+        </div>
+        {% if edit %}
+            <input type="submit" value="Remove from Fitting Room">
+        {% endif %}
+    </form>
+
+    {% if not edit %}
+        <a href="/store/fittingroom?edit=True"><button>Edit Fitting Room</button></a>
+    {% endif %}
+{% endblock %}

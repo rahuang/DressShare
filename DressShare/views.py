@@ -7,6 +7,7 @@ from django.views.generic.base import View
 from django.views.generic import TemplateView
 
 from django.shortcuts import render
+from django.shortcuts import redirect
 
 from django.contrib.auth.views import redirect_to_login
 from django.contrib.auth.decorators import login_required
@@ -38,16 +39,38 @@ class NotFoundView(ErrorView):
     
 class IndexPage(TemplateView):
     """ The Index Page. """
-    template_name = 'index.html'
+    #template_name = 'index.html'
+
+    def get(self, request):
+        return render(request, "index.html", {"user": request.user, "loggedin": request.user.is_authenticated()})
 
 class Gallery(TemplateView):
 
-    @method_decorator(login_required)
+    #@method_decorator(login_required)
     def get(self, request):
         user = request.user
-        profileUser = Profile.objects.filter(user=user)
-        dresses = Dress.objects.filter(owner=profileUser)
-        return render(request, "gallery.html", {"username": user.username, "dresses": dresses})
+        #profileUser = Profile.objects.filter(user=user)
+        dresses = Dress.objects.filter(availability=True)
+        return render(request, "gallery.html", {"dresses": dresses, "user": request.user, "loggedin": request.user.is_authenticated()})
+
+class Details(TemplateView):
+    #@method_decorator(login_required)
+    def get(self, request, id_name=None):
+        if(id_name == None):
+            return redirect('gallery')
+
+        try:
+            id_name = int(id_name)
+        except:
+            return redirect('gallery')
+
+        try:
+            dress = Dress.objects.get(id=id_name)
+        except:
+            return HttpResponse("Invalid Dress")
+        
+        return render(request, "details.html", {"dress": dress, "user": request.user, "loggedin": request.user.is_authenticated()})
+
 
         
     

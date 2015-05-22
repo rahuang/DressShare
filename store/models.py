@@ -8,9 +8,37 @@ def get_upload_file_name(instance, filename):
 
 class Dress(models.Model):
     name = models.TextField()
-    owner = models.ForeignKey(Profile)
-    thumbnail = models.FileField(upload_to=get_upload_file_name, blank=True)
+    owner = models.ForeignKey(User)
+    picture = models.FileField(upload_to=get_upload_file_name, blank=True)
+    description = models.TextField(blank=True)
+    color = models.TextField()
+    size = models.SmallIntegerField()
+
+    LENGTH_CHOICES = (
+        ('mini', 'Mini'),
+        ('mid', 'Mid-Thigh'),
+        ('knee', 'Knee'),
+        ('tea', 'Tea'),
+        ('long', 'Long'),
+    )
+    length = models.CharField(max_length=4, choices=LENGTH_CHOICES)
+
+    FORMALITY_CHOICES = (
+        ('B', 'Black-Tie'),
+        ('C', 'Cocktail'),
+        ('N', 'Night-Out'),
+        ('D', 'Day-Time'),
+    )
+    formality = models.CharField(max_length=1, choices=FORMALITY_CHOICES)
+
+    availability = models.BooleanField()
 
     def __unicode__(self):
-        return "name: " + self.name + " owner: " + self.owner.user.username
-        
+        return "name: " + self.name + " owner: " + self.owner.username
+
+class FittingRoom(models.Model):
+    user = models.ForeignKey(User)
+    dress = models.ForeignKey(Dress)
+
+    def __unicode__(self):
+        return "name: " + str(self.user) + " dress: " + str(self.dress)

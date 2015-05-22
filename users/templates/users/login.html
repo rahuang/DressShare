@@ -2,6 +2,12 @@
 
 {% block title %}Login Page{% endblock %}
 
+{% block logout %}
+    {% with loggedin=loggedin fname=user.first_name %}
+        {{block.super}}
+    {% endwith %}
+{% endblock logout %}
+
 {% block body %}
     <h2>Login Page</h2>
     <p><a href="{% url 'users_register' %}">Register Here</a></p>
