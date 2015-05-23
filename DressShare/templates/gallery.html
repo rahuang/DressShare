@@ -10,7 +10,12 @@
 {% endblock logout %}
 
 {% block body %}
-    <p>You are currently logged in as {{user.username}}</p>
+    {% if loggedin %}
+        <p>You are currently logged in as {{user.username}}</p>
+    {% endif %}
+    {% if logout %}
+        <p>Just logged out!</p>
+    {% endif %}
     <p>All the dresses you can borrow:</p>
     <div>
         {% for dress in dresses %}

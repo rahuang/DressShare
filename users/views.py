@@ -1,7 +1,10 @@
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.views.generic.base import View
 from django.views.generic import TemplateView
+
 from django.shortcuts import redirect
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import resolve, Resolver404
 from django.shortcuts import render
 
 from django.contrib.auth import authenticate, login, logout
@@ -18,7 +21,12 @@ class LoginPage(TemplateView):
     #template_name = 'users/login.html'
     def get(self, request):
         if(not request.user.is_authenticated()):
-            return render(request, 'users/login.html', {"user": request.user, "loggedin": request.user.is_authenticated()})
+            redirectBool = False
+            redirectDest = None
+            if 'next' in request.GET:
+                redirectBool = True
+                redirectDest = request.GET['next']
+            return render(request, 'users/login.html', {"user": request.user, "loggedin": request.user.is_authenticated(), "redirect": redirectBool, "redirectDest": redirectDest})
         else:
             return redirect('gallery')
 
@@ -39,7 +47,8 @@ class LogoutPage(View):
     
     def get(self, request):
         logout(request)
-        return redirect('users_test')
+        return HttpResponseRedirect('/gallery?logout=True')
+        #return redirect('gallery')
         
         
 class ProcessLog(View):
@@ -71,8 +80,16 @@ class ProcessLog(View):
         if user is not None:
             if user.is_active:
                 login(request, user)
+                if 'next' in postData:
+                    try:
+
+                        resolve(postData['next'])
+                        return HttpResponseRedirect(postData['next'])
+                    except Resolver404:
+                        return redirect('gallery')
                 
                 # Everything is OK
+                #return redirect('gallery')
                 return redirect('gallery')
                 
             else:

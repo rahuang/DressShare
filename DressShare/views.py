@@ -50,8 +50,12 @@ class Gallery(TemplateView):
     def get(self, request):
         user = request.user
         #profileUser = Profile.objects.filter(user=user)
+        logout = False
+        if 'logout' in request.GET and request.GET['logout'] == "True":
+            logout = True
+
         dresses = Dress.objects.filter(availability=True)
-        return render(request, "gallery.html", {"dresses": dresses, "user": request.user, "loggedin": request.user.is_authenticated()})
+        return render(request, "gallery.html", {"dresses": dresses, "user": request.user, "loggedin": request.user.is_authenticated(), "logout": logout})
 
 class Details(TemplateView):
     #@method_decorator(login_required)

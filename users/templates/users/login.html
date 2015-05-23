@@ -11,11 +11,17 @@
 {% block body %}
     <h2>Login Page</h2>
     <p><a href="{% url 'users_register' %}">Register Here</a></p>
+    {% if redirect %}
+        <h4>You need to login to view page</h4>
+    {% endif %}
     <div>
         <form name="login" action="{% url 'users_processlog' %}" method="POST">
             {% csrf_token %}
             <input type="text" name="username">
             <input type="password" name="password">
+            {% if redirectDest %}
+                <input type="text" name="next" value="{{ redirectDest }}" hidden>
+            {% endif %}
             <input type="submit" value="Login">
         </form>
     </div>
