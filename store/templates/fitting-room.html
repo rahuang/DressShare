@@ -33,6 +33,8 @@
                         <img src="/media/{{ fit.dress.picture }}" height="100px"/>
                     {% endif %}
                     <br>
+                    <p>Owner: {{fit.dress.owner.username}}</p>
+                    <a href="/store/processrequest?id={{ fit.dress.id }}">request dress</a>
                 </li>
             {% endfor %}
         </div>

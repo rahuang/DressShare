@@ -7,9 +7,9 @@ from store import views
 
 urlpatterns = patterns('',
     url(
-            r'^test1/$',
-            views.TestPage.as_view(),
-            name='test1',
+            r'^own-dress/$',
+            views.OwnDress.as_view(),
+            name='own-dress',
         ),
     url(
             r'^add-dress/$',
@@ -31,4 +31,15 @@ urlpatterns = patterns('',
             views.FittingRoomView.as_view(),
             name='fitting-room',
         ),
+    url(
+            r'^processrequest/$',
+            views.ProcessRequest.as_view(),
+            name='process-request',
+        ),
+    url(
+            r'^requests/$',
+            views.Requests.as_view(),
+            name='requests',
+        ),
+    
 )

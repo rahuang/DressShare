@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}Test Dress Page{% endblock %}
+
+{% block logout %}
+    {% with loggedin=loggedin fname=user.first_name %}
+        {{block.super}}
+    {% endwith %}
+{% endblock logout %}
+
+
+{% block body %}
+    <h2>Requests</h2>
+    <div>
+        <h3>Requests pending your approval:</h3>
+        {% for request in pendingRequests %}
+            <li>
+                <a href="/detail/{{request.dress.id}}">{{ request.dress.name }}</a>
+                <br>
+                {% if request.dress.picture %}
+                    <img src="/media/{{ request.dress.picture }}" height="100px"/>
+                    <br>
+                {% endif %}
+                <p>Request Reason: {{ request.reason }}</p>
+                <p>Start Time: {{ request.startDate }}</p>
+                <p>End Time: {{ request.endDate }}</p>
+                <form action="/store/processrequest/" method="post">
+                    {% csrf_token %}
+                    <input type="number" name="cancel" value="{{ request.id }}" hidden>
+                    <input type="submit" value="cancel the request">
+                </form>
+            </li>
+        {% endfor %}
+    </div>
+    <br><br>
+    <div>
+        <h3>Requests that you sent:</h3>
+        {% for request in yourRequests %}
+            <li>
+                <a href="/detail/{{request.dress.id}}">{{ request.dress.name }}</a>
+                <br>
+                {% if request.dress.picture %}
+                    <img src="/media/{{ request.dress.picture }}" height="100px"/>
+                    <br>
+                {% endif %}
+                <p>Owner: {{ request.dress.owner.username }}</p>
+                <p>Request Reason: {{ request.reason }}</p>
+                <p>Start Time: {{ request.startDate }}</p>
+                <p>End Time: {{ request.endDate }}</p>
+                <form action="/store/processrequest/" method="post">
+                    {% csrf_token %}
+                    <input type="number" name="cancel" value="{{ request.id }}" hidden>
+                    <input type="submit" value="cancel your request">
+                </form>
+            </li>
+        {% endfor %}
+    </div>
+
+{% endblock %}

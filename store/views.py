@@ -1,4 +1,6 @@
 import sys
+from datetime import datetime
+
 
 from django.core.exceptions import PermissionDenied
 from django.http import (HttpResponse, HttpResponseNotFound,
@@ -28,6 +30,19 @@ class TestPage(TemplateView):
         
         if user.is_authenticated():
             return render(request, "test1.html", {"username": user.username, "dresses": dresses, "user": request.user, "loggedin": request.user.is_authenticated()})
+
+class OwnDress(TemplateView):
+    @method_decorator(login_required)
+    def get(self, request):
+        user = request.user
+        #print user
+        #profileUser = Profile.objects.filter(user=user)
+        dresses = Dress.objects.filter(owner=user)
+        #return HttpResponse(profileUser)
+        
+        if user.is_authenticated():
+            return render(request, "test1.html", {"username": user.username, "dresses": dresses, "user": request.user, "loggedin": request.user.is_authenticated()})
+
 
 # class AddDress(TemplateView):
 #     @method_decorator(login_required)
@@ -159,4 +174,89 @@ class FittingRoomView(TemplateView):
         except:
             return HttpResponse("Invalid Dress")
 
-        return render(request, 'fitting-room.html', {"user": request.user, "loggedin": request.user.is_authenticated(), "fitroom": fitroom, "edit": edit}) 
+        return render(request, 'fitting-room.html', {"user": request.user, "loggedin": request.user.is_authenticated(), "fitroom": fitroom, "edit": edit})
+
+
+class ProcessRequest(TemplateView):
+    @method_decorator(login_required)
+    def get(self, request):
+        user = request.user
+        getData = request.GET
+        today = datetime.now().strftime("%Y-%m-%d")
+        todayTime = datetime.now().strftime("%H:%M")
+
+        try:
+            dressID = int(getData['id'])
+        except:
+            return redirect('fitting-room')
+
+        try:
+            dress = Dress.objects.get(id=dressID)
+        except:
+            return HttpResponse("Invalid Dress")
+
+        return render(request, 'process-request.html', {"user": request.user, "loggedin": request.user.is_authenticated(), "dress": dress, "today": today, "todayTime": todayTime})
+
+    @method_decorator(login_required)
+    def post(self, request):
+        user = request.user
+        postData = request.POST
+
+        if 'reason' in postData:
+            try:
+                dressID = int(postData['id'])
+                reason = postData['reason']
+                startDate = postData['startDate']
+                startTime = postData['startTime']
+                endDate = postData['endDate']
+                endTime = postData['endTime']
+
+            except:
+                return redirect('fitting-room')
+
+            try:
+                dress = Dress.objects.get(id=dressID)
+                if not Request.objects.filter(user=user, dress=dress).exists() and dress.availability:
+                    newRequest = Request(user=user, dress=dress, reason=reason, startDate=startDate+" "+startTime, endDate=endDate+" "+endTime)
+                    newRequest.save()
+                    dress.availability = False
+                    dress.save()
+                    fitroom = FittingRoom.objects.get(user=user, dress=dress)
+                    fitroom.delete()
+            except:
+                return HttpResponse("Invalid Dress")
+
+            return redirect("requests")
+        elif 'cancel' in postData:
+            try:
+                requestID = int(postData['cancel'])
+            except:
+                #return redirect('requests')
+                return HttpResponse("error1")
+
+            try:
+                request = Request.objects.get(id=requestID)
+                dress = request.dress
+                fittingroom = FittingRoom(user=user, dress=dress)
+                fittingroom.save()
+                dress.availability = True
+                dress.save()
+                request.delete()
+            except:
+                #return redirect('requests')
+                return HttpResponse("error2")
+
+            return redirect('requests')
+
+
+class Requests(TemplateView):
+
+    @method_decorator(login_required)
+    def get(self, request):
+        user = request.user
+        getData = request.GET
+
+        yourRequests = Request.objects.filter(user=user)
+        pendingRequests = Request.objects.filter(dress__owner=user)
+
+        return render(request, 'requests.html', {"user": request.user, "loggedin": request.user.is_authenticated(), "pendingRequests": pendingRequests, "yourRequests": yourRequests})

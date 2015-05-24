@@ -20,11 +20,13 @@
     <div>
         {% for dress in dresses %}
             <li>
-                <a href="/detail/{{dress.id}}">{{ dress.name }}</a>
+                <a href="/detail/{{dress.id}}"><h3>{{ dress.name }}</h3></a>
                 <br>
                 {% if dress.picture %}
                     <img src="/media/{{ dress.picture }}" height="100px"/>
                 {% endif %}
+                <br>
+                <p>Owner: {{dress.owner.username}}</p>
                 <br>
                 <a href="/store/processfittingroom?id={{dress.id}}">add to fitting room</a>
             </li>

@@ -34,11 +34,21 @@ class Dress(models.Model):
     availability = models.BooleanField()
 
     def __unicode__(self):
-        return "name: " + self.name + " owner: " + self.owner.username
+        return "Dress(name: " + self.name + " owner: " + self.owner.username + ")"
 
 class FittingRoom(models.Model):
     user = models.ForeignKey(User)
     dress = models.ForeignKey(Dress)
 
     def __unicode__(self):
-        return "name: " + str(self.user) + " dress: " + str(self.dress)
+        return "FittingRoom(name: " + str(self.user) + " dress: " + str(self.dress) + ")"
+
+class Request(models.Model):
+    user = models.ForeignKey(User)
+    dress = models.ForeignKey(Dress)
+    reason = models.TextField()
+    startDate = models.DateTimeField()
+    endDate = models.DateTimeField()
+
+    def __unicode__(self):
+        return "Request(name: " + str(self.user) + " dress: " + str(self.dress) + ")"

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}Test Dress Page{% endblock %}
+
+{% block logout %}
+    {% with loggedin=loggedin fname=user.first_name %}
+        {{block.super}}
+    {% endwith %}
+{% endblock logout %}
+
+{% block body %}
+    <h2>Request Dress</h2>
+    <div>
+        <h4>{{ dress.name }}</h4>
+        <br>
+        {% if dress.picture %}
+            <img src="/media/{{ dress.picture }}" height="100px"/>
+            <br>
+        {% endif %}
+        <p>{{ dress.description }}</p>
+
+        <form action="{% url 'process-request' %}" method="POST">
+            {% csrf_token %}
+            <input type="number" name="id" value="{{ dress.id }}" hidden>
+            <p>Reason for Borrowing Dress: <textarea name="reason" cols="50" rows="6" required></textarea></p>
+            <p>Start Date/Time: <input type="date" name="startDate" min="{{ today }}" value="{{ today }}" required><input type="time" name="startTime" value="{{todayTime}}" required></p>
+            <p>End Date/Time: <input type="date" name="endDate" min="{{ today }}" value="{{ today }}" required><input type="time" name="endTime" value="{{todayTime}}" required></p>
+            <input type="submit" value="Submit Request">
+        </form>
+    </div>
+{% endblock %}
