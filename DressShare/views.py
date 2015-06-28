@@ -74,9 +74,6 @@ class Details(TemplateView):
             return HttpResponse("Invalid Dress")
         
         return render(request, "details.html", {"dress": dress, "user": request.user, "loggedin": request.user.is_authenticated()})
-
-
-        
     
     
 def staff_only(view):

@@ -119,7 +119,7 @@ class ProcessDress(TemplateView):
             return HttpResponseBadRequest(response)
 
 
-        return HttpResponse("added dress <a href='/store/test1'>click here</a>")
+        return HttpResponse("added dress <a href='/store/own-dresss'>click here</a>")
 
 
 class ProcessFit(TemplateView):
@@ -216,7 +216,9 @@ class ProcessRequest(TemplateView):
 
             try:
                 dress = Dress.objects.get(id=dressID)
-                if not Request.objects.filter(user=user, dress=dress).exists() and dress.availability:
+                if not dress.availability:
+                    return HttpResponse("Dress is now unavailable")
+                if not Request.objects.filter(user=user, dress=dress).exists():
                     newRequest = Request(user=user, dress=dress, reason=reason, startDate=startDate+" "+startTime, endDate=endDate+" "+endTime)
                     newRequest.save()
                     dress.availability = False
@@ -241,6 +243,22 @@ class ProcessRequest(TemplateView):
                 fittingroom.save()
                 dress.availability = True
                 dress.save()
+                request.delete()
+            except:
+                #return redirect('requests')
+                return HttpResponse("error2")
+
+            return redirect('requests')
+        elif 'approve' in postData:
+            try:
+                requestID = int(postData['approve'])
+            except:
+                #return redirect('requests')
+                return HttpResponse("error1")
+
+            try:
+                request = Request.objects.get(id=requestID)
+                dress = request.dress
                 request.delete()
             except:
                 #return redirect('requests')

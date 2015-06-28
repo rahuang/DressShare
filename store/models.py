@@ -52,3 +52,11 @@ class Request(models.Model):
 
     def __unicode__(self):
         return "Request(name: " + str(self.user) + " dress: " + str(self.dress) + ")"
+
+class Borrowed(models.Model):
+    user = models.ForeignKey(User)
+    dress = models.ForeignKey(Dress)
+    
+    
+    def __unicode__(self):
+        return "Borrowed(name: " + str(self.user) + " dress: " + str(self.dress) + ")"
